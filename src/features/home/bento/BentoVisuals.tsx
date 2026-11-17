@@ -19,97 +19,71 @@ export function BentoVisual({
   frameImgSrc,
   backdropSrc,
 }: BentoVisualProps) {
-  // 1. 矢量标注与双框放大镜：制图浅网格底色配多种序号与内凹箭头
+  // 1. 矢量标注与双框放大镜：复刻外扩橙色选中框、带尾圆章序号与双圆外切线放大镜
   if (kind === 'tools') {
     return (
-      <div className="relative h-48 overflow-hidden border-b border-[var(--rule)] bg-[var(--frame)] p-4">
-        <div className="relative h-full w-full overflow-hidden rounded-xl border border-[var(--rule)] bg-[var(--card)] p-4">
-          <div className="flex flex-wrap items-center gap-2 font-[family-name:var(--sans)] text-[0.75rem]">
-            {['1', '2', 'II', '甲'].map((num, idx) => (
-              <span
-                key={num}
-                className={`grid h-6 w-6 place-items-center rounded-full font-semibold text-white shadow-xs ${
-                  idx === 0 ? 'bg-[#0d9488]' : 'bg-[#f97316]'
-                }`}
-              >
-                {num}
-              </span>
-            ))}
-            <span className="ml-auto rounded-md bg-[var(--frame)] px-2 py-0.5 font-[family-name:var(--mono)] text-[0.6875rem] text-[var(--soft)]">
-              R=12px · 1.25x-6.0x
-            </span>
-          </div>
-
+      <div className="relative h-48 overflow-hidden border-b border-[var(--rule)] bg-[var(--frame)] p-3.5">
+        <div className="relative h-full w-full overflow-hidden rounded-xl border border-[var(--rule)] bg-[var(--card)] px-4 py-3">
           <svg
-            viewBox="0 0 420 110"
-            className="mt-2 h-24 w-full overflow-visible"
+            viewBox="0 0 460 132"
+            className="h-full w-full overflow-visible"
             aria-hidden="true"
           >
+            {/* 红色描边矩形 + 外扩橙色虚线控制框 + 顶部旋转杆 + 右上红叉 */}
             <rect
-              x="12"
-              y="18"
-              width="156"
-              height="68"
-              rx="10"
-              fill="color-mix(in srgb, var(--accent) 10%, transparent)"
-              stroke="var(--accent)"
-              strokeWidth="2"
-            />
-            <rect
-              x="6"
-              y="12"
-              width="168"
-              height="80"
-              rx="12"
-              fill="none"
-              stroke="var(--quiet)"
-              strokeDasharray="4 4"
-              strokeWidth="1"
-            />
-            <path
-              d="M 272 76 Q 228 32 180 48"
-              fill="none"
-              stroke="#f97316"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-            <circle cx="228" cy="46" r="4" fill="var(--card)" stroke="#f97316" strokeWidth="2" />
-            <polygon points="173,50 190,42 185,50 190,57" fill="#f97316" />
-            <rect
-              x="294"
+              x="22"
               y="32"
-              width="38"
-              height="30"
-              rx="5"
+              width="136"
+              height="68"
+              rx="3"
               fill="none"
-              stroke="var(--ink)"
-              strokeWidth="1.5"
+              stroke="#FF4D4D"
+              strokeWidth="2.5"
             />
-            <line
-              x1="332"
-              y1="47"
-              x2="354"
-              y2="40"
-              stroke="var(--quiet)"
-              strokeDasharray="3 3"
+            <rect
+              x="15"
+              y="25"
+              width="150"
+              height="82"
+              fill="none"
+              stroke="#F97316"
+              strokeWidth="1.4"
+              strokeDasharray="5 3"
             />
+            <line x1="90" y1="25" x2="90" y2="11" stroke="#F97316" strokeWidth="1.4" />
+            <circle cx="90" cy="9" r="3" fill="#F97316" />
+            <circle cx="174" cy="18" r="7" fill="#EF4444" />
+            <path d="M171.5 15.5l5 5M176.5 15.5l-5 5" stroke="#fff" strokeWidth="1.5" />
+
+            {/* 红底白边带尾圆章序号 A */}
+            <line x1="238" y1="84" x2="188" y2="62" stroke="#FF4D4D" strokeWidth="3.5" strokeLinecap="round" />
+            <polygon points="180,58 195,58 190,63 192,70" fill="#FF4D4D" />
+            <circle cx="248" cy="88" r="12" fill="#FF4D4D" stroke="#ffffff" strokeWidth="2" />
+            <text x="248" y="92" textAnchor="middle" fill="#ffffff" fontSize="11" fontWeight="700" fontFamily="var(--sans)">
+              A
+            </text>
+
+            {/* 双圆外公切线放大镜（复刻 08-magnifier.png） */}
+            <circle cx="312" cy="40" r="14" fill="none" stroke="#FF4D4D" strokeWidth="2.2" />
+            <line x1="321" y1="29" x2="394" y2="30" stroke="#FF4D4D" strokeWidth="1.8" />
+            <line x1="302" y1="50" x2="362" y2="105" stroke="#FF4D4D" strokeWidth="1.8" />
             <circle
-              cx="380"
-              cy="44"
-              r="28"
-              fill="color-mix(in srgb, var(--accent) 16%, var(--card))"
-              stroke="var(--accent)"
-              strokeWidth="2"
+              cx="396"
+              cy="68"
+              r="38"
+              fill="color-mix(in srgb, var(--accent) 14%, var(--paper))"
+              stroke="#FF4D4D"
+              strokeWidth="2.4"
             />
             <text
-              x="380"
-              y="48"
+              x="396"
+              y="72"
               textAnchor="middle"
               fontSize="11"
               fontFamily="var(--mono)"
               fill="var(--ink)"
             >
-              3.0x
+              4.25x
             </text>
           </svg>
         </div>
