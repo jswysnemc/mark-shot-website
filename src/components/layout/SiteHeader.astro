@@ -1,0 +1,139 @@
+---
+import {
+  ChatsCircle,
+  GithubLogo,
+  Moon,
+  Sun,
+  Translate,
+} from '@phosphor-icons/react/ssr';
+import type { SiteCopy } from '@/types/locale';
+import { withBase } from '@/utils/paths';
+
+interface Props {
+  copy: SiteCopy;
+  currentPage: 'home' | 'downloads';
+}
+
+const { copy, currentPage } = Astro.props;
+const homePrefix = copy.locale === 'zh-cn' ? '/zh-cn/' : '/';
+const downloadsHref =
+  copy.locale === 'zh-cn' ? '/zh-cn/downloads/' : '/downloads/';
+const targetSwitchHref =
+  currentPage === 'downloads'
+    ? copy.locale === 'zh-cn'
+      ? '/downloads/'
+      : '/zh-cn/downloads/'
+    : copy.switchHref;
+const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
+---
+
+<header class="site-bar" data-section>
+  <div class="wrap flex h-14 items-center justify-between gap-2 sm:gap-4">
+    <a
+      href={withBase(homePrefix)}
+      class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-[1.15rem] sm:text-[1.25rem] leading-none tracking-[-0.015em] text-[var(--ink)]"
+    >
+      <img
+        src={withBase('/favicon.svg')}
+        alt="Mark Shot"
+        width="26"
+        height="26"
+        class="h-[1.625rem] w-[1.625rem] shrink-0"
+      />
+      <span>Mark Shot</span>
+    </a>
+
+    <nav aria-label="Primary" class="flex items-center gap-1 sm:gap-2">
+      <div class="hidden items-center gap-1 md:flex">
+        <a
+          href={withBase(`${homePrefix}#benchmarks`)}
+          class="rounded-lg px-2.5 py-1.5 text-[0.9375rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+        >
+          {copy.header.navBenchmarks}
+        </a>
+        <a
+          href={withBase(`${homePrefix}#capabilities`)}
+          class="rounded-lg px-2.5 py-1.5 text-[0.9375rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+        >
+          {copy.header.navFeatures}
+        </a>
+        <a
+          href={withBase(`${homePrefix}#platforms`)}
+          class="rounded-lg px-2.5 py-1.5 text-[0.9375rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+        >
+          {copy.header.navThemes}
+        </a>
+      </div>
+
+      <a
+        href={withBase(downloadsHref)}
+        aria-current={currentPage === 'downloads' ? 'page' : undefined}
+        class:list={[
+          'shrink-0 whitespace-nowrap rounded-lg px-2 sm:px-2.5 py-1.5 text-[0.875rem] sm:text-[0.9375rem] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]',
+          currentPage === 'downloads'
+            ? 'font-medium text-[var(--ink)]'
+            : 'text-[var(--soft)]',
+        ]}
+      >
+        {copy.header.navDownloads}
+      </a>
+
+      <span class="mx-1 hidden h-3.5 w-px bg-[var(--rule)] sm:inline-block" aria-hidden="true"></span>
+
+      <a
+        href={withBase(targetSwitchHref)}
+        data-lang-switch={targetLangCode}
+        aria-label={copy.switchLabel}
+        title={copy.switchLabel}
+        class="inline-flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-1.5 sm:px-2 text-[0.875rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+      >
+        <Translate size={17} />
+        <span class="hidden sm:inline">{copy.switchLabel}</span>
+      </a>
+
+      <a
+        href="https://gitter.im/mark-shot/community"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Gitter"
+        title="Gitter"
+        class="hidden h-8 w-8 shrink-0 place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] sm:grid"
+      >
+        <ChatsCircle size={18} />
+      </a>
+
+      <a
+        href="https://github.com/jswysnemc/mark-shot"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub"
+        title="GitHub"
+        class="grid h-8 w-8 place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+      >
+        <GithubLogo size={18} />
+      </a>
+
+      <button
+        type="button"
+        data-theme-toggle
+        data-day-label={copy.header.dayLabel}
+        data-night-label={copy.header.nightLabel}
+        aria-label={copy.header.nightLabel}
+        title={copy.header.nightLabel}
+        class="grid h-8 w-8 cursor-pointer place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+      >
+        <Moon size={17} className="icon-moon" />
+        <Sun size={17} className="icon-sun hidden" />
+      </button>
+    </nav>
+  </div>
+</header>
+
+<style>
+  :global(:root[data-theme='night']) .icon-moon {
+    display: none;
+  }
+  :global(:root[data-theme='night']) .icon-sun {
+    display: block;
+  }
+</style>

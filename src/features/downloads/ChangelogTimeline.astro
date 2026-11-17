@@ -1,0 +1,134 @@
+---
+import {
+  ArrowSquareOut,
+  Lightning,
+  PlusCircle,
+  Wrench,
+} from '@phosphor-icons/react/ssr';
+import type { SiteCopy } from '@/types/locale';
+import type { ReleaseLogEntry } from '@/types/release';
+
+interface Props {
+  copy: SiteCopy['downloadsPage'];
+  logs: ReleaseLogEntry[];
+}
+
+const { copy, logs } = Astro.props;
+---
+
+<section class="relative" data-section data-hatch-band>
+  <div class="wrap pt-14 pb-16 md:pt-18 md:pb-22">
+    <div class="max-w-[42rem]">
+      <h2 class="text-[clamp(1.65rem,2.4vw,2.2rem)] leading-[1.12] font-normal text-[var(--ink)]">
+        {copy.changelogHeading}
+      </h2>
+      <p class="mt-3 text-[1rem] leading-[1.65] text-[var(--soft)]">
+        {copy.changelogSubheading}
+      </p>
+    </div>
+
+    <div class="mt-9 space-y-8">
+      {
+        logs.map((entry) => (
+          <article class="rounded-2xl border border-[var(--rule)] bg-[var(--card)] p-6 sm:p-8">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--rule)] pb-4">
+              <div class="flex items-baseline gap-3">
+                <h3 class="text-[1.45rem] leading-none font-normal text-[var(--ink)]">
+                  Mark Shot {entry.version}
+                </h3>
+                <time class="font-[family-name:var(--mono)] text-[0.8125rem] text-[var(--quiet)]">
+                  {entry.date}
+                </time>
+              </div>
+              <a
+                href={entry.tagUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 font-[family-name:var(--sans)] text-[0.8125rem] text-[var(--soft)] transition-colors hover:text-[var(--ink)]"
+              >
+                <span>GitHub Release</span>
+                <ArrowSquareOut size={14} />
+              </a>
+            </div>
+
+            <p class="mt-4 text-[0.9375rem] leading-[1.65] text-[var(--soft)]">
+              {entry.summary}
+            </p>
+
+            <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <div>
+                <h4 class="inline-flex items-center gap-1.5 font-[family-name:var(--sans)] text-[0.875rem] font-medium text-[var(--ink)]">
+                  <PlusCircle size={16} className="text-[var(--accent)]" />
+                  <span>{copy.categoryAdded}</span>
+                </h4>
+                <ul class="mt-3 space-y-2 text-[0.875rem] leading-[1.6] text-[var(--soft)]">
+                  {entry.added.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="inline-flex items-center gap-1.5 font-[family-name:var(--sans)] text-[0.875rem] font-medium text-[var(--ink)]">
+                  <Lightning size={16} className="text-[var(--accent)]" />
+                  <span>{copy.categoryImproved}</span>
+                </h4>
+                <ul class="mt-3 space-y-2 text-[0.875rem] leading-[1.6] text-[var(--soft)]">
+                  {entry.improved.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="inline-flex items-center gap-1.5 font-[family-name:var(--sans)] text-[0.875rem] font-medium text-[var(--ink)]">
+                  <Wrench size={16} className="text-[var(--accent)]" />
+                  <span>{copy.categoryFixed}</span>
+                </h4>
+                <ul class="mt-3 space-y-2 text-[0.875rem] leading-[1.6] text-[var(--soft)]">
+                  {entry.fixed.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section class="relative" data-section data-hatch-band>
+  <div class="wrap pt-14 pb-18 md:pt-18 md:pb-24">
+    <h2 class="text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.15] font-normal text-[var(--ink)]">
+      {copy.helpHeading}
+    </h2>
+
+    <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {
+        copy.helpItems.map((item) => (
+          <div class="rounded-2xl border border-[var(--rule)] bg-[var(--card)] p-5 sm:p-6">
+            <h3 class="text-[1.15rem] leading-[1.2] font-normal text-[var(--ink)]">
+              {item.title}
+            </h3>
+            <p class="mt-2 text-[0.9375rem] leading-[1.6] text-[var(--soft)]">
+              {item.body}
+            </p>
+            {item.linkHref && item.linkLabel ? (
+              <a
+                href={item.linkHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-3 inline-flex items-center gap-1 font-[family-name:var(--sans)] text-[0.8125rem] font-medium text-[var(--accent)] hover:underline"
+              >
+                <span>{item.linkLabel}</span>
+                <ArrowSquareOut size={14} />
+              </a>
+            ) : null}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

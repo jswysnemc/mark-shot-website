@@ -1,0 +1,258 @@
+---
+import '@/styles/global.css';
+import type { SiteCopy } from '@/types/locale';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import { ToastViewport } from '@/components/ui/ToastViewport';
+import { withBase } from '@/utils/paths';
+
+interface Props {
+  copy: SiteCopy;
+  title: string;
+  description: string;
+  currentPage: 'home' | 'downloads';
+  enableRootZhRedirect?: boolean;
+}
+
+const {
+  copy,
+  title,
+  description,
+  currentPage,
+  enableRootZhRedirect = false,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const zhAltPath = currentPage === 'downloads' ? '/zh-cn/downloads/' : '/zh-cn/';
+const enAltPath = currentPage === 'downloads' ? '/downloads/' : '/';
+const zhHref = new URL(withBase(zhAltPath), Astro.site).toString();
+const enHref = new URL(withBase(enAltPath), Astro.site).toString();
+const ogImage = new URL(withBase('/images/settings-zh.png'), Astro.site).toString();
+const zhRedirectTarget = withBase('/zh-cn/');
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Mark Shot',
+  softwareVersion: '0.2.1',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Linux, Windows',
+  inLanguage: copy.htmlLang,
+  description,
+  url: canonicalUrl,
+  downloadUrl: 'https://github.com/jswysnemc/mark-shot/releases/tag/v0.2.1',
+  license: 'https://opensource.org/licenses/MIT',
+};
+---
+
+<!doctype html>
+<html lang={copy.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f6f7f5" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="zh-CN" href={zhHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={enHref} />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mark Shot" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    />
+
+    {
+      enableRootZhRedirect && (
+        <script is:inline define:vars={{ zhRedirectTarget }}>
+          // 【多语言路由】【首访嗅探】未显式指定语言时，中文环境浏览器自动跳转至简体中文首页
+          (() => {
+            let saved = null;
+            try {
+              saved = localStorage.getItem('mark-shot-lang');
+            } catch {}
+            const preferred =
+              (navigator.languages || [navigator.language || 'en']).find((item) =>
+                /^(zh|en)\b/i.test(item)
+              ) || 'en';
+            if (saved ? saved === 'zh-cn' : /^zh/i.test(preferred)) {
+              location.replace(zhRedirectTarget + location.hash);
+            }
+          })();
+        </script>
+      )
+    }
+
+    <script is:inline>
+      // 【主题引擎】【首屏同步】在首次绘制前确定日间或夜间模式，避免白屏闪烁
+      (() => {
+        const root = document.documentElement;
+        let savedTheme = null;
+        try {
+          savedTheme = localStorage.getItem('mark-shot-theme');
+        } catch {}
+        const resolved =
+          savedTheme ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'night'
+            : 'day');
+        root.dataset.theme = resolved;
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute(
+            'content',
+            resolved === 'night' ? '#0d1012' : '#f6f7f5'
+          );
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div class="hatch" aria-hidden="true"></div>
+    <SiteHeader copy={copy} currentPage={currentPage} />
+    <main class="relative z-10">
+      <div
+        data-top-sentinel
+        aria-hidden="true"
+        class="pointer-events-none absolute top-0 left-0 h-2 w-px"
+      ></div>
+      <slot />
+    </main>
+    <SiteFooter copy={copy} currentPage={currentPage} />
+    <ToastViewport client:load />
+
+    <script>
+      /**
+       * 【建筑辅助框】【横向分界】测量各区块顶部坐标并写入 CSS 渐变遮罩，复刻制图分界带
+       * @returns 无返回值
+       */
+      function bindHatchBands(): void {
+        const hatchEl = document.querySelector<HTMLElement>('.hatch');
+        if (!hatchEl) {
+          return;
+        }
+
+        // 1. 通过隐藏探针节点读取当前响应式 --inset 像素宽度
+        const updateBands = () => {
+          const probe = document.createElement('div');
+          probe.style.cssText =
+            'position:absolute;visibility:hidden;width:var(--inset)';
+          document.body.append(probe);
+          const bandHeight = probe.getBoundingClientRect().width;
+          probe.remove();
+
+          // 2. 采集需要绘制横向斜线带的区块边界坐标
+          const targets = Array.from(
+            document.querySelectorAll<HTMLElement>('[data-hatch-band]')
+          );
+          const stops = targets
+            .map((node) => node.getBoundingClientRect().top + window.scrollY)
+            .flatMap((topPx) => [
+              `transparent ${topPx - bandHeight / 2}px`,
+              `#000 ${topPx - bandHeight / 2}px`,
+              `#000 ${topPx + bandHeight / 2}px`,
+              `transparent ${topPx + bandHeight / 2}px`,
+            ]);
+
+          hatchEl.style.setProperty(
+            '--hbands',
+            stops.length > 0
+              ? `linear-gradient(to bottom, ${stops.join(', ')})`
+              : 'linear-gradient(transparent, transparent)'
+          );
+        };
+
+        new ResizeObserver(updateBands).observe(document.body);
+        updateBands();
+      }
+
+      /**
+       * 【顶部导航】【状态交互】绑定语言偏好记录、明暗主题切换与顶栏平滑显隐控制
+       * @returns 无返回值
+       */
+      function bindHeaderControls(): void {
+        // 1. 记录用户主动点击的语言偏好
+        document
+          .querySelectorAll<HTMLAnchorElement>('[data-lang-switch]')
+          .forEach((link) => {
+            link.addEventListener('click', () => {
+              const lang = link.dataset.langSwitch;
+              if (!lang) {
+                return;
+              }
+              try {
+                localStorage.setItem('mark-shot-lang', lang);
+              } catch {}
+            });
+          });
+
+        // 2. 绑定明暗主题按钮切换及无障碍标签刷新
+        const root = document.documentElement;
+        const themeBtn = document.querySelector<HTMLButtonElement>(
+          '[data-theme-toggle]'
+        );
+        const syncThemeLabel = () => {
+          if (!themeBtn) {
+            return;
+          }
+          const nextLabel =
+            root.dataset.theme === 'night'
+              ? themeBtn.dataset.dayLabel || ''
+              : themeBtn.dataset.nightLabel || '';
+          themeBtn.setAttribute('aria-label', nextLabel);
+          themeBtn.title = nextLabel;
+        };
+
+        themeBtn?.addEventListener('click', () => {
+          const nextTheme = root.dataset.theme === 'night' ? 'day' : 'night';
+          root.dataset.theme = nextTheme;
+          const meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) {
+            meta.setAttribute(
+              'content',
+              nextTheme === 'night' ? '#0d1012' : '#f6f7f5'
+            );
+          }
+          try {
+            localStorage.setItem('mark-shot-theme', nextTheme);
+          } catch {}
+          syncThemeLabel();
+        });
+        syncThemeLabel();
+
+        // 3. 使用 IntersectionObserver 感知首屏离开状态，零滚动帧监听开销
+        const bar = document.querySelector<HTMLElement>('.site-bar');
+        const sentinel = document.querySelector<HTMLElement>(
+          '[data-top-sentinel]'
+        );
+        if (!bar || !sentinel) {
+          return;
+        }
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            if (entry) {
+              bar.classList.toggle('is-scrolled', !entry.isIntersecting);
+            }
+          },
+          { threshold: 0 }
+        );
+        observer.observe(sentinel);
+      }
+
+      bindHatchBands();
+      bindHeaderControls();
+    </script>
+  </body>
+</html>

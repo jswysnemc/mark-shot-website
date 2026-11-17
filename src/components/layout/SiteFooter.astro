@@ -1,0 +1,104 @@
+---
+import {
+  Bug,
+  ChatsCircle,
+  GithubLogo,
+} from '@phosphor-icons/react/ssr';
+import type { SiteCopy } from '@/types/locale';
+import { withBase } from '@/utils/paths';
+
+interface Props {
+  copy: SiteCopy;
+  currentPage: 'home' | 'downloads';
+}
+
+const { copy, currentPage } = Astro.props;
+const homeHref = copy.locale === 'zh-cn' ? '/zh-cn/' : '/';
+const downloadsHref =
+  copy.locale === 'zh-cn' ? '/zh-cn/downloads/' : '/downloads/';
+const targetSwitchHref =
+  currentPage === 'downloads'
+    ? copy.locale === 'zh-cn'
+      ? '/downloads/'
+      : '/zh-cn/downloads/'
+    : copy.switchHref;
+const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
+---
+
+<footer class="relative" data-section data-hatch-band>
+  <div class="wrap grid grid-cols-1 items-end gap-6 pt-12 pb-8 md:grid-cols-[minmax(0,1fr)_auto]">
+    <div>
+      <a
+        href={withBase(homeHref)}
+        class="inline-flex items-center gap-2 text-[1.35rem] leading-none text-[var(--ink)]"
+      >
+        <img
+          src={withBase('/favicon.svg')}
+          alt="Mark Shot"
+          width="24"
+          height="24"
+          class="h-6 w-6"
+        />
+        <span>Mark Shot</span>
+      </a>
+      <p class="mt-2.5 max-w-[46ch] text-[0.9375rem] text-[var(--soft)]">
+        {copy.footer.tagline}
+      </p>
+    </div>
+
+    <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.9375rem] text-[var(--soft)]">
+      <li>
+        <a href={withBase(downloadsHref)} class="transition-colors hover:text-[var(--ink)]">
+          {copy.footer.downloads}
+        </a>
+      </li>
+      <li>
+        <a
+          href={withBase(targetSwitchHref)}
+          data-lang-switch={targetLangCode}
+          class="transition-colors hover:text-[var(--ink)]"
+        >
+          {copy.switchLabel}
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/jswysnemc/mark-shot/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
+        >
+          <Bug size={16} />
+          <span>{copy.footer.issues}</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://gitter.im/mark-shot/community"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
+        >
+          <ChatsCircle size={16} />
+          <span>Gitter</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/jswysnemc/mark-shot"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
+        >
+          <GithubLogo size={16} />
+          <span>GitHub</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="col-span-full flex flex-wrap items-center justify-between gap-3 border-t border-[var(--rule)] pt-5 text-[0.8125rem] text-[var(--quiet)]">
+      <span>{copy.footer.licenseNote}</span>
+      <span>{copy.footer.versionText}</span>
+    </div>
+  </div>
+</footer>

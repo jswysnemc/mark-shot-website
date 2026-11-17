@@ -1,0 +1,50 @@
+---
+import type { Locale } from '@/types/locale';
+import BaseLayout from '@/components/layout/BaseLayout.astro';
+import HeroSection from '@/features/home/HeroSection.astro';
+import { BenchmarksSection } from '@/features/home/BenchmarksSection';
+import CapabilitiesBento from '@/features/home/bento/CapabilitiesBento.astro';
+import { ThemeProtocolShowcase } from '@/features/home/ThemeProtocolShowcase';
+import DownloadCallout from '@/features/home/DownloadCallout.astro';
+import { getSiteCopy } from '@/data/site-copy';
+import { getBenchmarksData } from '@/data/benchmarks-data';
+import { getThemesProtocolsData } from '@/data/themes-protocols-data';
+import { withBase } from '@/utils/paths';
+
+interface Props {
+  locale: Locale;
+  enableRootZhRedirect?: boolean;
+}
+
+const { locale, enableRootZhRedirect = false } = Astro.props;
+const copy = getSiteCopy(locale);
+const benchmarkItems = getBenchmarksData(locale);
+const themeProtocolItems = getThemesProtocolsData(locale).map((entry) => ({
+  ...entry,
+  previewScreenshot: withBase(entry.previewScreenshot),
+}));
+---
+
+<BaseLayout
+  copy={copy}
+  title={copy.meta.homeTitle}
+  description={copy.meta.homeDescription}
+  currentPage="home"
+  enableRootZhRedirect={enableRootZhRedirect}
+>
+  <HeroSection copy={copy} />
+  <BenchmarksSection
+    client:load
+    copy={copy.benchmarks}
+    items={benchmarkItems}
+  />
+  <CapabilitiesBento copy={copy.capabilities} locale={locale} />
+  <ThemeProtocolShowcase
+    client:visible
+    copy={copy.themesProtocols}
+    commonCopy={copy.common}
+    items={themeProtocolItems}
+    isZh={locale === 'zh-cn'}
+  />
+  <DownloadCallout copy={copy.downloadCallout} locale={locale} />
+</BaseLayout>

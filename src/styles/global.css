@@ -1,0 +1,246 @@
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/geist';
+@import 'tailwindcss';
+
+:root,
+:root[data-theme='day'] {
+  --paper: #f6f7f5;
+  --card: #ffffff;
+  --frame: #e9eeec;
+  --ink: #161a19;
+  --soft: #4c5653;
+  --quiet: #66716e;
+  --rule: color-mix(in srgb, var(--ink) 13%, transparent);
+  --accent: #0d9488;
+  --accent-ink: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--card));
+  --serif: 'Newsreader Variable', 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', Georgia, serif;
+  --sans: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
+  --mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --margin: max(clamp(0.75rem, 3.6vw, 4rem), calc((100vw - 1240px) / 2));
+  --inset: clamp(0.875rem, 2.2vw, 2rem);
+  --edge: calc(var(--margin) + var(--inset));
+  --hatch: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ink) 11%, transparent) 0 1px,
+    transparent 1px 7px
+  );
+  color-scheme: light;
+}
+
+:root[data-theme='night'] {
+  --paper: #0d1012;
+  --card: #14191c;
+  --frame: #1b2226;
+  --ink: #ebf0ee;
+  --soft: #9ca7a4;
+  --quiet: #83908d;
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+  --accent: #2dd4bf;
+  --accent-ink: #07221f;
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, var(--card));
+  color-scheme: dark;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  line-height: 1.65;
+  font-variant-numeric: lining-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.35s ease, color 0.35s ease;
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
+
+body {
+  margin: 0;
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  padding-inline: var(--edge);
+  position: relative;
+}
+
+/* 建筑制图斜线辅助框：沿左右留白轨与区块分界带延伸 */
+.hatch {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hatch::before,
+.hatch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--hatch);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.hatch::before {
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent var(--margin),
+      #000 var(--margin) var(--edge),
+      transparent var(--edge) calc(100% - var(--edge)),
+      #000 calc(100% - var(--edge)) calc(100% - var(--margin)),
+      transparent calc(100% - var(--margin))
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      #000 7rem,
+      #000 calc(100% - 7rem),
+      transparent
+    );
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent var(--margin),
+      #000 var(--margin) var(--edge),
+      transparent var(--edge) calc(100% - var(--edge)),
+      #000 calc(100% - var(--edge)) calc(100% - var(--margin)),
+      transparent calc(100% - var(--margin))
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      #000 7rem,
+      #000 calc(100% - 7rem),
+      transparent
+    );
+}
+
+.hatch::after {
+  -webkit-mask-image:
+    var(--hbands, linear-gradient(transparent, transparent)),
+    linear-gradient(
+      to right,
+      transparent,
+      #000 var(--margin),
+      #000 calc(100% - var(--margin)),
+      transparent
+    );
+  mask-image:
+    var(--hbands, linear-gradient(transparent, transparent)),
+    linear-gradient(
+      to right,
+      transparent,
+      #000 var(--margin),
+      #000 calc(100% - var(--margin)),
+      transparent
+    );
+}
+
+/* 顶部单行吸顶栏：高度严格控制在 3.5rem（56px） */
+.site-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    translate 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-bar.is-scrolled {
+  background-color: color-mix(in srgb, var(--paper) 84%, transparent);
+  box-shadow: 0 1px 0 var(--rule);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+}
+
+.site-bar.is-hidden {
+  box-shadow: none;
+  translate: 0 -100%;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-bar.is-scrolled {
+    background-color: var(--paper);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-bar {
+    transition: none;
+  }
+}
+
+/* 全站统一胶囊形主次操作按钮 */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 0.72rem 1.35rem;
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    opacity 0.18s ease,
+    background-color 0.18s ease,
+    transform 0.12s ease;
+}
+
+.btn-pill:active {
+  transform: scale(0.98);
+}
+
+.btn-pill--ink {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+.btn-pill--ink:hover {
+  opacity: 0.88;
+}
+
+.btn-pill--line {
+  background-color: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
+.btn-pill--line:hover {
+  background-color: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+/* 移动端能力卡片横向滚动吸附隐藏滚动条 */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

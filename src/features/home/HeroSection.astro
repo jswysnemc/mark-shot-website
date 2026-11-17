@@ -1,0 +1,59 @@
+---
+import type { SiteCopy } from '@/types/locale';
+import { CaptureStage } from '@/features/home/stage/CaptureStage';
+import { withBase } from '@/utils/paths';
+
+interface Props {
+  copy: SiteCopy;
+}
+
+const { copy } = Astro.props;
+const isZh = copy.locale === 'zh-cn';
+const downloadsBase = isZh ? '/zh-cn/downloads/' : '/downloads/';
+const startDownloadHref = withBase(`${downloadsBase}?start`);
+const allPlatformsHref = withBase(downloadsBase);
+const backdropSrc = withBase('/images/capture-backdrop.jpg');
+---
+
+<section class="relative" data-section>
+  <div class="wrap pt-10 pb-14 md:pt-14 md:pb-20">
+    <div class="mx-auto flex max-w-[44rem] flex-col items-center text-center">
+      <p class="text-[0.8125rem] leading-[1.4] text-[var(--quiet)]">
+        {copy.hero.versionBadge}
+      </p>
+
+      <h1
+        class:list={[
+          'mt-3 mb-4 font-normal text-[var(--ink)] [text-wrap:balance]',
+          isZh
+            ? 'text-[clamp(1.95rem,3.6vw,3.1rem)] leading-[1.16] tracking-normal'
+            : 'text-[clamp(2.05rem,3.8vw,3.25rem)] leading-[1.08] tracking-[-0.02em]',
+        ]}
+      >
+        {copy.hero.headline}
+      </h1>
+
+      <p class="max-w-[38rem] text-[1.0625rem] leading-[1.65] text-[var(--soft)] [text-wrap:pretty] md:text-[1.125rem]">
+        {copy.hero.lede}
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+        <a href={startDownloadHref} class="btn-pill btn-pill--ink">
+          {copy.hero.primaryCta}
+        </a>
+        <a href={allPlatformsHref} class="btn-pill btn-pill--line">
+          {copy.hero.secondaryCta}
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-10 md:mt-12">
+      <CaptureStage
+        client:load
+        labels={copy.stage}
+        backdropSrc={backdropSrc}
+        isZh={isZh}
+      />
+    </div>
+  </div>
+</section>
