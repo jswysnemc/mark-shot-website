@@ -1,6 +1,7 @@
 ---
 import {
-  ChatsCircle,
+  BookOpenText,
+  DownloadSimple,
   GithubLogo,
   Moon,
   Sun,
@@ -11,121 +12,141 @@ import { withBase } from '@/utils/paths';
 
 interface Props {
   copy: SiteCopy;
-  currentPage: 'home' | 'downloads';
+  currentPage: 'home' | 'docs' | 'downloads';
 }
 
 const { copy, currentPage } = Astro.props;
-const homePrefix = copy.locale === 'zh-cn' ? '/zh-cn/' : '/';
-const downloadsHref =
-  copy.locale === 'zh-cn' ? '/zh-cn/downloads/' : '/downloads/';
+const isZh = copy.locale === 'zh-cn';
+const homePrefix = isZh ? '/zh-cn/' : '/';
+const docsHref = isZh ? '/zh-cn/docs/' : '/docs/';
+const downloadsHref = isZh ? '/zh-cn/downloads/' : '/downloads/';
+const startDownloadHref = `${downloadsHref}?start`;
 const targetSwitchHref =
   currentPage === 'downloads'
-    ? copy.locale === 'zh-cn'
+    ? isZh
       ? '/downloads/'
       : '/zh-cn/downloads/'
-    : copy.switchHref;
-const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
+    : currentPage === 'docs'
+      ? isZh
+        ? '/docs/'
+        : '/zh-cn/docs/'
+      : copy.switchHref;
+const targetLangCode = isZh ? 'en' : 'zh-cn';
 ---
 
-<header class="site-bar" data-section>
-  <div class="wrap flex h-14 items-center justify-between gap-2 sm:gap-4">
-    <a
-      href={withBase(homePrefix)}
-      class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-[1.15rem] sm:text-[1.25rem] leading-none tracking-[-0.015em] text-[var(--ink)]"
+<header class="site-bar pt-2.5 pb-1" data-section>
+  <div class="wrap">
+    <div
+      class="mx-auto flex h-[3.125rem] max-w-[1160px] items-center justify-between gap-1.5 rounded-2xl border border-[var(--rule)] bg-[color-mix(in_srgb,var(--card)_88%,transparent)] px-2.5 shadow-[0_10px_28px_-20px_rgba(15,23,42,0.28)] backdrop-blur-md sm:h-[3.25rem] sm:gap-2 sm:px-5"
     >
-      <img
-        src={withBase('/favicon.svg')}
-        alt="Mark Shot"
-        width="26"
-        height="26"
-        class="h-[1.625rem] w-[1.625rem] shrink-0"
-      />
-      <span>Mark Shot</span>
-    </a>
+      <div class="flex min-w-0 items-center gap-1.5 sm:gap-4 lg:gap-6">
+        <a
+          href={withBase(homePrefix)}
+          class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-[family-name:var(--sans)] text-[0.95rem] font-semibold tracking-[-0.015em] text-[var(--ink)] sm:gap-2 sm:text-[1.0625rem]"
+        >
+          <img
+            src={withBase('/favicon.svg')}
+            alt="Mark Shot"
+            width="24"
+            height="24"
+            class="h-[1.5rem] w-[1.5rem] shrink-0 sm:h-[1.5625rem] sm:w-[1.5625rem]"
+          />
+          <span class="hidden min-[380px]:inline">Mark Shot</span>
+        </a>
 
-    <nav aria-label="Primary" class="flex items-center gap-1 sm:gap-2">
-      <div class="hidden items-center gap-1 md:flex">
-        <a
-          href={withBase(`${homePrefix}#benchmarks`)}
-          class="rounded-lg px-2.5 py-1.5 text-[0.9375rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
+        <nav
+          aria-label="Primary"
+          class="flex items-center gap-0.5 font-[family-name:var(--sans)] sm:gap-1"
         >
-          {copy.header.navBenchmarks}
-        </a>
-        <a
-          href={withBase(`${homePrefix}#capabilities`)}
-          class="rounded-lg px-2.5 py-1.5 text-[0.9375rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
-        >
-          {copy.header.navFeatures}
-        </a>
-        <a
-          href={withBase(`${homePrefix}#platforms`)}
-          class="rounded-lg px-2.5 py-1.5 text-[0.9375rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
-        >
-          {copy.header.navThemes}
-        </a>
+          <a
+            href={withBase(`${homePrefix}#capabilities`)}
+            class="hidden whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[0.875rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] md:inline-flex"
+          >
+            {copy.header.navFeatures}
+          </a>
+          <a
+            href={withBase(`${homePrefix}#benchmarks`)}
+            class="hidden whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[0.875rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] md:inline-flex"
+          >
+            {copy.header.navBenchmarks}
+          </a>
+          <a
+            href={withBase(docsHref)}
+            aria-current={currentPage === 'docs' ? 'page' : undefined}
+            class:list={[
+              'inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1 text-[0.8125rem] sm:px-2.5 sm:py-1.5 sm:text-[0.875rem] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]',
+              currentPage === 'docs'
+                ? 'bg-[var(--accent-soft)] font-medium text-[var(--accent)]'
+                : 'text-[var(--soft)]',
+            ]}
+          >
+            <BookOpenText size={15} className="hidden sm:inline" />
+            <span>{copy.header.navDocs}</span>
+          </a>
+          <a
+            href={withBase(downloadsHref)}
+            aria-current={currentPage === 'downloads' ? 'page' : undefined}
+            class:list={[
+              'shrink-0 whitespace-nowrap rounded-lg px-1.5 py-1 text-[0.8125rem] sm:px-2.5 sm:py-1.5 sm:text-[0.875rem] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]',
+              currentPage === 'downloads'
+                ? 'bg-[var(--accent-soft)] font-medium text-[var(--accent)]'
+                : 'text-[var(--soft)]',
+            ]}
+          >
+            {copy.header.navDownloads}
+          </a>
+        </nav>
       </div>
 
-      <a
-        href={withBase(downloadsHref)}
-        aria-current={currentPage === 'downloads' ? 'page' : undefined}
-        class:list={[
-          'shrink-0 whitespace-nowrap rounded-lg px-2 sm:px-2.5 py-1.5 text-[0.875rem] sm:text-[0.9375rem] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]',
-          currentPage === 'downloads'
-            ? 'font-medium text-[var(--ink)]'
-            : 'text-[var(--soft)]',
-        ]}
-      >
-        {copy.header.navDownloads}
-      </a>
+      <div class="flex shrink-0 items-center gap-0.5 sm:gap-1.5 font-[family-name:var(--sans)]">
+        <a
+          href={withBase(targetSwitchHref)}
+          data-lang-switch={targetLangCode}
+          aria-label={copy.switchLabel}
+          title={copy.switchLabel}
+          class="inline-flex h-7.5 w-7.5 shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-lg text-[0.8125rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] sm:h-8 sm:w-auto sm:px-2"
+        >
+          <Translate size={16} />
+          <span class="hidden sm:inline">{copy.switchLabel}</span>
+        </a>
 
-      <span class="mx-1 hidden h-3.5 w-px bg-[var(--rule)] sm:inline-block" aria-hidden="true"></span>
+        <a
+          href="https://github.com/jswysnemc/mark-shot"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          title="GitHub"
+          class="hidden h-8 w-8 shrink-0 place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] sm:grid"
+        >
+          <GithubLogo size={17} />
+        </a>
 
-      <a
-        href={withBase(targetSwitchHref)}
-        data-lang-switch={targetLangCode}
-        aria-label={copy.switchLabel}
-        title={copy.switchLabel}
-        class="inline-flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-1.5 sm:px-2 text-[0.875rem] text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
-      >
-        <Translate size={17} />
-        <span class="hidden sm:inline">{copy.switchLabel}</span>
-      </a>
+        <button
+          type="button"
+          data-theme-toggle
+          data-day-label={copy.header.dayLabel}
+          data-night-label={copy.header.nightLabel}
+          aria-label={copy.header.nightLabel}
+          title={copy.header.nightLabel}
+          class="grid h-7.5 w-7.5 shrink-0 cursor-pointer place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] sm:h-8 sm:w-8"
+        >
+          <Moon size={16} className="icon-moon" />
+          <Sun size={16} className="icon-sun hidden" />
+        </button>
 
-      <a
-        href="https://gitter.im/mark-shot/community"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Gitter"
-        title="Gitter"
-        class="hidden h-8 w-8 shrink-0 place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)] sm:grid"
-      >
-        <ChatsCircle size={18} />
-      </a>
-
-      <a
-        href="https://github.com/jswysnemc/mark-shot"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="GitHub"
-        title="GitHub"
-        class="grid h-8 w-8 place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
-      >
-        <GithubLogo size={18} />
-      </a>
-
-      <button
-        type="button"
-        data-theme-toggle
-        data-day-label={copy.header.dayLabel}
-        data-night-label={copy.header.nightLabel}
-        aria-label={copy.header.nightLabel}
-        title={copy.header.nightLabel}
-        class="grid h-8 w-8 cursor-pointer place-items-center rounded-lg text-[var(--soft)] transition-colors hover:bg-[color-mix(in_srgb,var(--ink)_6%,transparent)] hover:text-[var(--ink)]"
-      >
-        <Moon size={17} className="icon-moon" />
-        <Sun size={17} className="icon-sun hidden" />
-      </button>
-    </nav>
+        {
+          currentPage !== 'downloads' && (
+            <a
+              href={withBase(startDownloadHref)}
+              class="ml-1 hidden h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-[var(--accent)] px-3.5 text-[0.8125rem] font-medium text-[var(--accent-ink)] transition-opacity hover:opacity-90 lg:inline-flex"
+            >
+              <DownloadSimple size={14} weight="bold" />
+              <span>{copy.header.headerDownloadCta}</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
   </div>
 </header>
 

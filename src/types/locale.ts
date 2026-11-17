@@ -23,20 +23,24 @@ export interface SiteCopy {
   meta: {
     homeTitle: string;
     homeDescription: string;
+    docsTitle: string;
+    docsDescription: string;
     downloadsTitle: string;
     downloadsDescription: string;
   };
   header: {
     navFeatures: string;
     navBenchmarks: string;
+    navDocs: string;
     navThemes: string;
     navDownloads: string;
+    headerDownloadCta: string;
     dayLabel: string;
     nightLabel: string;
   };
   hero: {
-    versionBadge: string;
-    headline: string;
+    headlinePrefix: string;
+    headlineHighlight: string;
     lede: string;
     primaryCta: string;
     secondaryCta: string;
@@ -121,10 +125,10 @@ export interface SiteCopy {
   };
   footer: {
     tagline: string;
+    docs: string;
     downloads: string;
     issues: string;
     licenseNote: string;
-    versionText: string;
   };
   common: {
     copyLabel: string;

@@ -240,6 +240,28 @@ export function getReleaseLogs(locale: Locale): ReleaseLogEntry[] {
   if (locale === 'zh-cn') {
     return [
       {
+        version: '0.2.2',
+        date: '2026-11-18',
+        tagUrl: 'https://github.com/jswysnemc/mark-shot/releases/tag/v0.2.2',
+        summary: '新增 OCR 下载镜像加速、截图起始界面精简开关、系统文件保存门户与极简双预览长截图面板，并修复输入法与 Wayland 悬浮层拖动抖动。',
+        added: [
+          '新增 [ocr].download_mirror 与 MARK_SHOT_OCR_MIRROR 镜像前缀配置，异常自动回退直连 GitHub 并强制校验 SHA-256（#171）',
+          '新增 [capture].show_start_bar 与 show_hints 开关，支持隐藏顶部模式栏与左下角快捷键面板直接拖选（#165、#171）',
+          '编辑器与历史记录中的另存为改用系统原生文件对话框（Linux XDG FileChooser 门户 / Windows IFileSaveDialog）',
+          '重构无边框极简双预览长截图面板，保留捕获区外框并在状态栏实时显示 +px 拼接增量',
+        ],
+        improved: [
+          '多个聚焦与椭圆聚焦区域合并为单一遮罩，不再重复叠加外围暗度；新增画布与贴图滚轮缩放百分比徽标',
+          '“打开方式”纳入标记 NoDisplay=true 的图片查看器（如 imv，#174），--debug 启动时向标准错误打印日志路径（#171）',
+          '优化二级属性工具栏、下拉悬停与选中项间距、取色器滑块手柄及 Windows 分层圆角窗口外角裁切',
+        ],
+        fixed: [
+          '为全部单行输入框接入 Wayland text-input-v3 与 X11 XIM，并在 Layer 覆盖层按需切换 OnDemand 焦点以兼容 Fcitx5（#172）',
+          '通过穿透点击的帧节流预览层消除 Wayland 悬浮录制控制面板拖动时的往返抖动与滞后（#173）',
+          '修复门户热插拔显示器枚举与恢复令牌重试（#168）、沙箱缺少 dmabuf/xdg-output 时的覆盖层映射（#167、#170）、HiDPI 选区缩放（#169）及 AppImage 辅助进程 SIGBUS（#166）',
+        ],
+      },
+      {
         version: '0.2.1',
         date: '2026-11-17',
         tagUrl: 'https://github.com/jswysnemc/mark-shot/releases/tag/v0.2.1',
@@ -284,6 +306,28 @@ export function getReleaseLogs(locale: Locale): ReleaseLogEntry[] {
   }
 
   return [
+    {
+      version: '0.2.2',
+      date: '2026-11-18',
+      tagUrl: 'https://github.com/jswysnemc/mark-shot/releases/tag/v0.2.2',
+      summary: 'Adds OCR download mirror settings, capture startup UI toggles, native file-chooser save dialogs, and a minimalist dual-preview scrolling capture panel.',
+      added: [
+        'Configurable [ocr].download_mirror and MARK_SHOT_OCR_MIRROR with automatic direct-GitHub fallback and SHA-256 verification (#171)',
+        'Opt-in [capture].show_start_bar and show_hints switches under Settings -> Capture for direct one-step region selection (#165, #171)',
+        'Native system file save dialogs (Linux XDG FileChooser portal / Windows IFileSaveDialog) for Save as in editor and history',
+        'Borderless minimalist dual-preview scrolling capture panel retaining the region outline and live +px stitch increments',
+      ],
+      improved: [
+        'Multiple Focus and Ellipse focus regions combine into a unified surround-dimming mask without stacking darkness; wheel zoom displays percentage badges',
+        'Open with includes MIME-registered image viewers marked NoDisplay=true such as imv (#174), and --debug prints the active log path (#171)',
+        'Refined secondary property bars, dropdown item spacing, color picker slider handles, and Windows rounded-corner clipping',
+      ],
+      fixed: [
+        'Enabled Wayland zwp_text_input_v3 and X11 XIM across all single-line UI fields with OnDemand Layer focus handoff for Fcitx5 (#172)',
+        'Eliminated Wayland layer-surface drag oscillation on the floating recording panel via a frame-throttled preview layer (#173)',
+        'Fixed portal hot-plugged monitor detection and stale restore tokens (#168), sandboxed Wayland xdg_toplevel sizing (#167, #170), HiDPI selection bounds (#169), and AppImage helper SIGBUS crashes (#166)',
+      ],
+    },
     {
       version: '0.2.1',
       date: '2026-11-17',

@@ -1,5 +1,6 @@
 ---
 import {
+  BookOpenText,
   Bug,
   ChatsCircle,
   GithubLogo,
@@ -9,20 +10,25 @@ import { withBase } from '@/utils/paths';
 
 interface Props {
   copy: SiteCopy;
-  currentPage: 'home' | 'downloads';
+  currentPage: 'home' | 'docs' | 'downloads';
 }
 
 const { copy, currentPage } = Astro.props;
-const homeHref = copy.locale === 'zh-cn' ? '/zh-cn/' : '/';
-const downloadsHref =
-  copy.locale === 'zh-cn' ? '/zh-cn/downloads/' : '/downloads/';
+const isZh = copy.locale === 'zh-cn';
+const homeHref = isZh ? '/zh-cn/' : '/';
+const docsHref = isZh ? '/zh-cn/docs/' : '/docs/';
+const downloadsHref = isZh ? '/zh-cn/downloads/' : '/downloads/';
 const targetSwitchHref =
   currentPage === 'downloads'
-    ? copy.locale === 'zh-cn'
+    ? isZh
       ? '/downloads/'
       : '/zh-cn/downloads/'
-    : copy.switchHref;
-const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
+    : currentPage === 'docs'
+      ? isZh
+        ? '/docs/'
+        : '/zh-cn/docs/'
+      : copy.switchHref;
+const targetLangCode = isZh ? 'en' : 'zh-cn';
 ---
 
 <footer class="relative" data-section data-hatch-band>
@@ -30,7 +36,7 @@ const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
     <div>
       <a
         href={withBase(homeHref)}
-        class="inline-flex items-center gap-2 text-[1.35rem] leading-none text-[var(--ink)]"
+        class="inline-flex items-center gap-2 font-[family-name:var(--sans)] text-[1.2rem] font-semibold leading-none text-[var(--ink)]"
       >
         <img
           src={withBase('/favicon.svg')}
@@ -46,7 +52,16 @@ const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
       </p>
     </div>
 
-    <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.9375rem] text-[var(--soft)]">
+    <ul class="flex flex-wrap items-center gap-x-5 gap-y-2 font-[family-name:var(--sans)] text-[0.875rem] text-[var(--soft)]">
+      <li>
+        <a
+          href={withBase(docsHref)}
+          class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
+        >
+          <BookOpenText size={15} />
+          <span>{copy.footer.docs}</span>
+        </a>
+      </li>
       <li>
         <a href={withBase(downloadsHref)} class="transition-colors hover:text-[var(--ink)]">
           {copy.footer.downloads}
@@ -68,7 +83,7 @@ const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
           rel="noopener noreferrer"
           class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
         >
-          <Bug size={16} />
+          <Bug size={15} />
           <span>{copy.footer.issues}</span>
         </a>
       </li>
@@ -79,7 +94,7 @@ const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
           rel="noopener noreferrer"
           class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
         >
-          <ChatsCircle size={16} />
+          <ChatsCircle size={15} />
           <span>Gitter</span>
         </a>
       </li>
@@ -90,15 +105,14 @@ const targetLangCode = copy.locale === 'zh-cn' ? 'en' : 'zh-cn';
           rel="noopener noreferrer"
           class="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ink)]"
         >
-          <GithubLogo size={16} />
+          <GithubLogo size={15} />
           <span>GitHub</span>
         </a>
       </li>
     </ul>
 
-    <div class="col-span-full flex flex-wrap items-center justify-between gap-3 border-t border-[var(--rule)] pt-5 text-[0.8125rem] text-[var(--quiet)]">
+    <div class="col-span-full flex flex-wrap items-center justify-between gap-3 border-t border-[var(--rule)] pt-5 font-[family-name:var(--sans)] text-[0.8125rem] text-[var(--quiet)]">
       <span>{copy.footer.licenseNote}</span>
-      <span>{copy.footer.versionText}</span>
     </div>
   </div>
 </footer>

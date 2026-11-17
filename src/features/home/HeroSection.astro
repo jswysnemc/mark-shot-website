@@ -1,4 +1,5 @@
 ---
+import { BookOpenText, DownloadSimple } from '@phosphor-icons/react/ssr';
 import type { SiteCopy } from '@/types/locale';
 import { CaptureStage } from '@/features/home/stage/CaptureStage';
 import { withBase } from '@/utils/paths';
@@ -10,44 +11,71 @@ interface Props {
 const { copy } = Astro.props;
 const isZh = copy.locale === 'zh-cn';
 const downloadsBase = isZh ? '/zh-cn/downloads/' : '/downloads/';
+const docsBase = isZh ? '/zh-cn/docs/' : '/docs/';
 const startDownloadHref = withBase(`${downloadsBase}?start`);
-const allPlatformsHref = withBase(downloadsBase);
+const docsHref = withBase(docsBase);
 const backdropSrc = withBase('/images/capture-backdrop.jpg');
 ---
 
-<section class="relative" data-section>
-  <div class="wrap pt-10 pb-14 md:pt-14 md:pb-20">
-    <div class="mx-auto flex max-w-[44rem] flex-col items-center text-center">
-      <p class="text-[0.8125rem] leading-[1.4] text-[var(--quiet)]">
-        {copy.hero.versionBadge}
-      </p>
+<section class="relative overflow-hidden" data-section>
+  {/* 融合 PixPin 像素坐标捕获细网格与参考准星标尺线 */}
+  <div aria-hidden="true" class="capture-grid pointer-events-none absolute inset-x-0 top-0 h-[520px]"></div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-[var(--edge)] top-[108px] hidden border-t border-dashed border-[var(--rule)] lg:block"
+  >
+    <span class="absolute -top-3 left-3 rounded bg-[var(--card)] px-1.5 py-0.5 font-[family-name:var(--mono)] text-[0.6875rem] text-[var(--quiet)] ring-1 ring-[var(--rule)]">
+      Y 245
+    </span>
+  </div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute top-0 right-[calc(var(--edge)+6rem)] hidden h-[440px] border-r border-dashed border-[var(--rule)] xl:block"
+  >
+    <span class="absolute top-6 -right-7 rounded bg-[var(--card)] px-1.5 py-0.5 font-[family-name:var(--mono)] text-[0.6875rem] text-[var(--quiet)] ring-1 ring-[var(--rule)]">
+      X 1036
+    </span>
+  </div>
 
+  <div class="wrap pt-8 pb-14 md:pt-12 md:pb-20">
+    <div class="mx-auto flex max-w-[46rem] flex-col items-center text-center">
       <h1
         class:list={[
-          'mt-3 mb-4 font-normal text-[var(--ink)] [text-wrap:balance]',
+          'mb-4 font-normal text-[var(--ink)] [text-wrap:balance]',
           isZh
-            ? 'text-[clamp(1.95rem,3.6vw,3.1rem)] leading-[1.16] tracking-normal'
-            : 'text-[clamp(2.05rem,3.8vw,3.25rem)] leading-[1.08] tracking-[-0.02em]',
+            ? 'text-[clamp(2rem,3.8vw,3.25rem)] leading-[1.22] tracking-normal'
+            : 'text-[clamp(2.05rem,3.9vw,3.3rem)] leading-[1.15] tracking-[-0.02em]',
         ]}
       >
-        {copy.hero.headline}
+        <span>{copy.hero.headlinePrefix}</span>
+        <span
+          class="relative mx-1 inline-block rounded-[8px] border border-dashed border-[var(--accent)] bg-[var(--accent-soft)] px-2.5 py-0.5 text-[var(--accent)]"
+        >
+          {copy.hero.headlineHighlight}
+          <i aria-hidden="true" class="absolute -top-[3px] -left-[3px] h-[6px] w-[6px] border border-[var(--accent)] bg-[var(--card)]"></i>
+          <i aria-hidden="true" class="absolute -top-[3px] -right-[3px] h-[6px] w-[6px] border border-[var(--accent)] bg-[var(--card)]"></i>
+          <i aria-hidden="true" class="absolute -bottom-[3px] -left-[3px] h-[6px] w-[6px] border border-[var(--accent)] bg-[var(--card)]"></i>
+          <i aria-hidden="true" class="absolute -right-[3px] -bottom-[3px] h-[6px] w-[6px] border border-[var(--accent)] bg-[var(--card)]"></i>
+        </span>
       </h1>
 
-      <p class="max-w-[38rem] text-[1.0625rem] leading-[1.65] text-[var(--soft)] [text-wrap:pretty] md:text-[1.125rem]">
+      <p class="max-w-[38rem] text-[1.03rem] leading-[1.65] text-[var(--soft)] [text-wrap:pretty] md:text-[1.1rem]">
         {copy.hero.lede}
       </p>
 
-      <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
         <a href={startDownloadHref} class="btn-pill btn-pill--ink">
-          {copy.hero.primaryCta}
+          <DownloadSimple size={16} weight="bold" />
+          <span>{copy.hero.primaryCta}</span>
         </a>
-        <a href={allPlatformsHref} class="btn-pill btn-pill--line">
-          {copy.hero.secondaryCta}
+        <a href={docsHref} class="btn-pill btn-pill--line">
+          <BookOpenText size={16} />
+          <span>{copy.hero.secondaryCta}</span>
         </a>
       </div>
     </div>
 
-    <div class="mt-10 md:mt-12">
+    <div class="mt-9 md:mt-11">
       <CaptureStage
         client:load
         labels={copy.stage}

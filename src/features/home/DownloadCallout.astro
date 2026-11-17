@@ -9,14 +9,15 @@ interface Props {
 
 const { copy, locale } = Astro.props;
 const downloadsBase = locale === 'zh-cn' ? '/zh-cn/downloads/' : '/downloads/';
+const docsBase = locale === 'zh-cn' ? '/zh-cn/docs/' : '/docs/';
 const startHref = withBase(`${downloadsBase}?start`);
-const allHref = withBase(downloadsBase);
+const docsHref = withBase(docsBase);
 ---
 
 <section class="relative" data-section data-hatch-band>
   <div class="wrap pt-14 pb-16 md:pt-20 md:pb-24">
     <div
-      class="rounded-[24px] border border-[var(--rule)] bg-[color-mix(in_srgb,var(--accent)_4%,var(--card))] p-6 sm:p-10 md:p-12"
+      class="rounded-2xl border border-[var(--rule)] bg-[color-mix(in_srgb,var(--accent)_4%,var(--card))] p-6 sm:p-10 md:p-12"
     >
       <div class="max-w-[40rem]">
         <h2 class="text-[clamp(1.7rem,2.6vw,2.35rem)] leading-[1.12] font-normal text-[var(--ink)]">
@@ -33,7 +34,7 @@ const allHref = withBase(downloadsBase);
         {
           copy.slots.map((slot) => (
             <li class="flex flex-col gap-1.5">
-              <span class="text-[1.2rem] leading-[1.2] text-[var(--ink)]">
+              <span class="font-[family-name:var(--sans)] text-[1.0625rem] font-medium leading-[1.2] text-[var(--ink)]">
                 {slot.platform}
               </span>
               <span class="text-[0.875rem] leading-[1.55] text-[var(--soft)]">
@@ -48,7 +49,7 @@ const allHref = withBase(downloadsBase);
         <a href={startHref} class="btn-pill btn-pill--ink">
           {copy.primaryCta}
         </a>
-        <a href={allHref} class="btn-pill btn-pill--line">
+        <a href={docsHref} class="btn-pill btn-pill--line">
           {copy.secondaryCta}
         </a>
       </div>

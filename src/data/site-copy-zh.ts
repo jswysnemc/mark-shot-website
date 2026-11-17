@@ -6,27 +6,32 @@ export const siteCopyZh: SiteCopy = {
   switchLabel: 'English',
   switchHref: '/',
   meta: {
-    homeTitle: 'Mark Shot：Rust 原生截图、标注与录屏工具',
+    homeTitle: 'Mark Shot：Rust 原生截图、贴图、文字识别与录屏工具',
     homeDescription:
-      'Mark Shot 以 Rust 与自研软件渲染器构建，不依赖 Qt、GTK 或 WebView。常驻唤起 31.6 ms，后台内存 21.6 MiB，内置 19 种标注、置顶贴图、本地 PP-OCRv5、原位翻译与硬件编码录屏。',
+      'Mark Shot 以 Rust 与自研软件渲染器构建，不依赖 Qt、GTK 或 WebView。常驻唤起 31.6 ms，后台内存 21.6 MiB，集框选标注、置顶贴图、本地 PP-OCRv5、原位翻译、长截图与硬件录屏于一体。',
+    docsTitle: '使用细则与配置手册 - Mark Shot',
+    docsDescription:
+      '查阅 Mark Shot 截图工作流、贴图交互、19 种标注工具、本地 PP-OCRv5 与翻译配置、屏幕录制、默认快捷键、config.toml 全字段及桌面协议支持细则。',
     downloadsTitle: '下载 Mark Shot 0.2.1 与版本记录',
     downloadsDescription:
       '下载面向 Debian、Ubuntu、Fedora、Arch Linux、NixOS、AppImage、Flatpak 与 Windows 的 Mark Shot 0.2.1 原生安装包，核对 SHA-256 摘要并查阅更新记录。',
   },
   header: {
-    navFeatures: '能力',
+    navFeatures: '功能',
     navBenchmarks: '实测',
+    navDocs: '细则手册',
     navThemes: '平台',
     navDownloads: '下载',
+    headerDownloadCta: '下载 Mark Shot',
     dayLabel: '切换到日间界面',
     nightLabel: '切换到夜间界面',
   },
   hero: {
-    versionBadge: 'Mark Shot 0.2.1',
-    headline: '截得稳，标得准，轻若无物',
-    lede: '以 Rust 与自研软件渲染器编写，不依赖 Qt、GTK 或 WebView。冻结桌面后即刻框选、标注、贴图、识别文字或录制视频。',
+    headlinePrefix: '截得稳，标得准，',
+    headlineHighlight: '贴上就能用',
+    lede: '基于 Rust 与自研软件渲染器构建，零 Qt、GTK 或 WebView 依赖。按下快捷键即可框选、贴图、识别文字或录制区域。',
     primaryCta: '下载 Mark Shot',
-    secondaryCta: '全部平台',
+    secondaryCta: '查阅细则手册',
   },
   stage: {
     windowTitle: 'Mark Shot 0.2.1 · Wayland 原生覆盖层',
@@ -74,9 +79,9 @@ export const siteCopyZh: SiteCopy = {
   },
   downloadCallout: {
     heading: '开始使用 Mark Shot',
-    body: '单可执行文件即可完成截图、标注、贴图、历史与扫码；预编译安装包已内置录屏媒体库。',
+    body: '单可执行文件覆盖截图、标注、贴图、历史与二维码识别；预编译安装包已内置进程内录屏媒体库。',
     primaryCta: '下载 Mark Shot',
-    secondaryCta: '全部平台',
+    secondaryCta: '查阅细则手册',
     slots: [
       {
         platform: 'Linux (Wayland / X11)',
@@ -137,11 +142,11 @@ export const siteCopyZh: SiteCopy = {
     ],
   },
   footer: {
-    tagline: '面向 Linux 与 Windows 的原生截图、标注与屏幕录制工具。',
+    tagline: '面向 Linux 与 Windows 的原生截图、贴图、识别与屏幕录制工具。',
+    docs: '细则手册',
     downloads: '下载',
     issues: '问题反馈',
     licenseNote: 'MIT 或 Apache-2.0 双许可',
-    versionText: 'Mark Shot 0.2.1',
   },
   common: {
     copyLabel: '复制',

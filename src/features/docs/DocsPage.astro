@@ -1,0 +1,30 @@
+---
+import type { Locale } from '@/types/locale';
+import BaseLayout from '@/components/layout/BaseLayout.astro';
+import { DocsPortal } from '@/features/docs/DocsPortal';
+import { getSiteCopy } from '@/data/site-copy';
+import { getDocsBundle } from '@/data/docs';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getSiteCopy(locale);
+const bundle = getDocsBundle(locale);
+---
+
+<BaseLayout
+  copy={copy}
+  title={copy.meta.docsTitle}
+  description={copy.meta.docsDescription}
+  currentPage="docs"
+>
+  <DocsPortal
+    client:load
+    bundle={bundle}
+    copyLabel={copy.common.copyLabel}
+    copiedLabel={copy.common.copiedLabel}
+    copiedToast={copy.common.copiedToast}
+  />
+</BaseLayout>

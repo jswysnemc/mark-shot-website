@@ -6,27 +6,32 @@ export const siteCopyEn: SiteCopy = {
   switchLabel: '简体中文',
   switchHref: '/zh-cn/',
   meta: {
-    homeTitle: 'Mark Shot: Native Screenshot, Annotation & Recording in Rust',
+    homeTitle: 'Mark Shot: Native Screenshot, Pin, OCR & Recording in Rust',
     homeDescription:
-      'Built in Rust with a custom software renderer and zero Qt, GTK, or WebView runtime. 31.6 ms tray wake, 21.6 MiB idle RAM, 19 annotation tools, pinned overlays, local PP-OCRv5, translation, and hardware-encoded recording.',
+      'Built in Rust with a custom software renderer and zero Qt, GTK, or WebView runtime. 31.6 ms wake, 21.6 MiB idle RAM, 19 annotation tools, pinned overlays, local PP-OCRv5, translation, and hardware recording.',
+    docsTitle: 'Documentation & Reference Manual - Mark Shot',
+    docsDescription:
+      'Complete technical manual for Mark Shot: CLI flags, pinned windows, 19 annotation tools, offline PP-OCRv5, translation providers, hardware recording, shortcuts, config.toml schema, and Wayland/X11/Windows backends.',
     downloadsTitle: 'Download Mark Shot 0.2.1 & Release Notes',
     downloadsDescription:
       'Download native Mark Shot 0.2.1 packages for Debian, Ubuntu, Fedora, Arch Linux, NixOS, AppImage, Flatpak, and Windows with verified SHA-256 digests.',
   },
   header: {
-    navFeatures: 'Capabilities',
+    navFeatures: 'Features',
     navBenchmarks: 'Benchmarks',
+    navDocs: 'Docs',
     navThemes: 'Platforms',
     navDownloads: 'Downloads',
+    headerDownloadCta: 'Download Mark Shot',
     dayLabel: 'Switch to day theme',
     nightLabel: 'Switch to night theme',
   },
   hero: {
-    versionBadge: 'Mark Shot 0.2.1',
-    headline: 'Instant capture, crisp marks, zero toolkit bloat',
-    lede: 'Written in Rust with a custom software renderer and no Qt, GTK, or WebView. Freeze the screen, annotate, pin, extract text, or record in milliseconds.',
+    headlinePrefix: 'Capture fast, mark crisp, ',
+    headlineHighlight: 'pin to screen',
+    lede: 'Native Rust screenshot, pin, offline OCR, and screen recorder with zero Qt, GTK, or WebView bloat.',
     primaryCta: 'Download Mark Shot',
-    secondaryCta: 'All Platforms',
+    secondaryCta: 'Read Documentation',
   },
   stage: {
     windowTitle: 'Mark Shot 0.2.1 · Native Wayland Layer-Shell',
@@ -76,7 +81,7 @@ export const siteCopyEn: SiteCopy = {
     heading: 'Start Using Mark Shot',
     body: 'A single executable covers capture, annotation, pinning, history, and barcode scanning. Prebuilt packages bundle recording media libraries.',
     primaryCta: 'Download Mark Shot',
-    secondaryCta: 'All Platforms',
+    secondaryCta: 'Read Documentation',
     slots: [
       {
         platform: 'Linux (Wayland / X11)',
@@ -137,11 +142,11 @@ export const siteCopyEn: SiteCopy = {
     ],
   },
   footer: {
-    tagline: 'Native screenshot, annotation, and screen recording tool for Linux and Windows.',
+    tagline: 'Native screenshot, pin, offline OCR, and screen recording utility for Linux and Windows.',
+    docs: 'Documentation',
     downloads: 'Downloads',
     issues: 'Issues',
     licenseNote: 'Dual-licensed under MIT or Apache-2.0',
-    versionText: 'Mark Shot 0.2.1',
   },
   common: {
     copyLabel: 'Copy',

@@ -2,13 +2,15 @@
 import type { Locale } from '@/types/locale';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import HeroSection from '@/features/home/HeroSection.astro';
+import { InteractiveFeatureShowcase } from '@/features/home/InteractiveFeatureShowcase';
 import { BenchmarksSection } from '@/features/home/BenchmarksSection';
-import CapabilitiesBento from '@/features/home/bento/CapabilitiesBento.astro';
+import { WorkflowRoleSwitcher } from '@/features/home/WorkflowRoleSwitcher';
 import { ThemeProtocolShowcase } from '@/features/home/ThemeProtocolShowcase';
 import DownloadCallout from '@/features/home/DownloadCallout.astro';
 import { getSiteCopy } from '@/data/site-copy';
 import { getBenchmarksData } from '@/data/benchmarks-data';
 import { getThemesProtocolsData } from '@/data/themes-protocols-data';
+import { getWorkflowsData } from '@/data/workflows-data';
 import { withBase } from '@/utils/paths';
 
 interface Props {
@@ -17,11 +19,17 @@ interface Props {
 }
 
 const { locale, enableRootZhRedirect = false } = Astro.props;
+const isZh = locale === 'zh-cn';
 const copy = getSiteCopy(locale);
+const docsBaseHref = withBase(isZh ? '/zh-cn/docs/' : '/docs/');
 const benchmarkItems = getBenchmarksData(locale);
 const themeProtocolItems = getThemesProtocolsData(locale).map((entry) => ({
   ...entry,
   previewScreenshot: withBase(entry.previewScreenshot),
+}));
+const workflowItems = getWorkflowsData(locale).map((entry) => ({
+  ...entry,
+  screenshotPath: withBase(entry.screenshotPath),
 }));
 ---
 
@@ -33,18 +41,40 @@ const themeProtocolItems = getThemesProtocolsData(locale).map((entry) => ({
   enableRootZhRedirect={enableRootZhRedirect}
 >
   <HeroSection copy={copy} />
+
+  <InteractiveFeatureShowcase
+    client:visible
+    heading={copy.capabilities.heading}
+    subheading={copy.capabilities.subheading}
+    isZh={isZh}
+    docsBaseHref={docsBaseHref}
+    selectedShotSrc={withBase('/images/real-selected-annotation.png')}
+    backdropSrc={withBase('/images/capture-backdrop.jpg')}
+  />
+
   <BenchmarksSection
-    client:load
+    client:visible
     copy={copy.benchmarks}
     items={benchmarkItems}
   />
-  <CapabilitiesBento copy={copy.capabilities} locale={locale} />
+
+  <WorkflowRoleSwitcher
+    client:visible
+    isZh={isZh}
+    docsBaseHref={docsBaseHref}
+    items={workflowItems}
+    copyLabel={copy.common.copyLabel}
+    copiedLabel={copy.common.copiedLabel}
+    copiedToast={copy.common.copiedToast}
+  />
+
   <ThemeProtocolShowcase
     client:visible
     copy={copy.themesProtocols}
     commonCopy={copy.common}
     items={themeProtocolItems}
-    isZh={locale === 'zh-cn'}
+    isZh={isZh}
   />
+
   <DownloadCallout copy={copy.downloadCallout} locale={locale} />
 </BaseLayout>

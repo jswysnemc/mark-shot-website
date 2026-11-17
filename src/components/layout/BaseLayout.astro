@@ -10,7 +10,7 @@ interface Props {
   copy: SiteCopy;
   title: string;
   description: string;
-  currentPage: 'home' | 'downloads';
+  currentPage: 'home' | 'docs' | 'downloads';
   enableRootZhRedirect?: boolean;
 }
 
@@ -23,8 +23,18 @@ const {
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const zhAltPath = currentPage === 'downloads' ? '/zh-cn/downloads/' : '/zh-cn/';
-const enAltPath = currentPage === 'downloads' ? '/downloads/' : '/';
+const zhAltPath =
+  currentPage === 'downloads'
+    ? '/zh-cn/downloads/'
+    : currentPage === 'docs'
+      ? '/zh-cn/docs/'
+      : '/zh-cn/';
+const enAltPath =
+  currentPage === 'downloads'
+    ? '/downloads/'
+    : currentPage === 'docs'
+      ? '/docs/'
+      : '/';
 const zhHref = new URL(withBase(zhAltPath), Astro.site).toString();
 const enHref = new URL(withBase(enAltPath), Astro.site).toString();
 const ogImage = new URL(withBase('/images/settings-zh.png'), Astro.site).toString();
@@ -197,39 +207,42 @@ const structuredData = {
             });
           });
 
-        // 2. 绑定明暗主题按钮切换及无障碍标签刷新
+        // 2. 绑定全页所有明暗主题切换按钮（含顶栏与文档侧栏）及无障碍标签刷新
         const root = document.documentElement;
-        const themeBtn = document.querySelector<HTMLButtonElement>(
-          '[data-theme-toggle]'
+        const themeBtns = Array.from(
+          document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')
         );
-        const syncThemeLabel = () => {
-          if (!themeBtn) {
-            return;
-          }
-          const nextLabel =
-            root.dataset.theme === 'night'
-              ? themeBtn.dataset.dayLabel || ''
-              : themeBtn.dataset.nightLabel || '';
-          themeBtn.setAttribute('aria-label', nextLabel);
-          themeBtn.title = nextLabel;
+        const syncThemeLabels = () => {
+          themeBtns.forEach((btn) => {
+            const nextLabel =
+              root.dataset.theme === 'night'
+                ? btn.dataset.dayLabel || ''
+                : btn.dataset.nightLabel || '';
+            if (nextLabel) {
+              btn.setAttribute('aria-label', nextLabel);
+              btn.title = nextLabel;
+            }
+          });
         };
 
-        themeBtn?.addEventListener('click', () => {
-          const nextTheme = root.dataset.theme === 'night' ? 'day' : 'night';
-          root.dataset.theme = nextTheme;
-          const meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) {
-            meta.setAttribute(
-              'content',
-              nextTheme === 'night' ? '#0d1012' : '#f6f7f5'
-            );
-          }
-          try {
-            localStorage.setItem('mark-shot-theme', nextTheme);
-          } catch {}
-          syncThemeLabel();
+        themeBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const nextTheme = root.dataset.theme === 'night' ? 'day' : 'night';
+            root.dataset.theme = nextTheme;
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+              meta.setAttribute(
+                'content',
+                nextTheme === 'night' ? '#0d1012' : '#f6f7f5'
+              );
+            }
+            try {
+              localStorage.setItem('mark-shot-theme', nextTheme);
+            } catch {}
+            syncThemeLabels();
+          });
         });
-        syncThemeLabel();
+        syncThemeLabels();
 
         // 3. 使用 IntersectionObserver 感知首屏离开状态，零滚动帧监听开销
         const bar = document.querySelector<HTMLElement>('.site-bar');
